@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Instructor List";
+}
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Rank</th>
+        <th>Hiring Date</th>
+        <th>?</th>
+    </tr>
+    
+    @foreach (var instructor in Model)
+    {
+        <tr>
+            <td>@instructor.FirstName @instructor.LastName</td>
+            <td>@instructor.Rank</td>
+            <td>@instructor.HiringDate</td>
+            <td><a asp-action="ShowDetails" asp-route-id="@instructor.Id">Show Details</a></td>
+        </tr>
+    }
+    
+</table>

@@ -1,0 +1,32 @@
+@* @Model Instructor *@
+
+@{
+    ViewData["Title"] = "Show Instructor Details";
+    
+    var tenured = Model.IsTenured ? "Permanent" : "Probationary";
+}
+
+<h1>Instructor Details</h1>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>@Model.FirstName @Model.LastName</td>
+    </tr>
+    <tr>
+        <th>Rank</th>
+        <td>@Model.Rank</td>
+    </tr>
+    <tr>
+        <th>Hiring Date</th>
+        <td>@Model.HiringDate</td>
+    </tr>
+    <tr>
+        <th>Is Tenured?</th>
+        <td>@tenured</td>
+    </tr>
+</table>

@@ -1,0 +1,36 @@
+@* @Model Student *@
+
+@{
+    ViewData["Title"] = "Show Details";
+}
+
+<h1>Student Details</h1>
+
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <td>@Model.Id</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>@Model.FirstName @Model.LastName</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+    <tr>
+        <th>Course</th>
+        <td>@Model.Course</td>
+    </tr>
+    <tr>
+        <th>Admission Date</th>
+        <td>@Model.AdmissionDate</td>
+    </tr>
+    <tr>
+        <th>GPA</th>
+        <td>@Model.GPA</td>
+    </tr>
+    
+    
+</table>
