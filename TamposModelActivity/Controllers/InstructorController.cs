@@ -38,6 +38,51 @@ namespace TamposModelActivity.Controllers
             return View(InstructorList);
         }
 
+        [HttpGet]
+        public IActionResult AddInstructor()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddInstructor(Instructor newInstructor)
+        {
+            InstructorList.Add(newInstructor);
+            return View("Index", InstructorList);
+        }
+
+        [HttpGet]
+        public IActionResult EditInstructor(int Id)
+        {
+            var instructor = InstructorList.FirstOrDefault(ins => ins.Id == Id);
+
+            if (instructor != null)
+            {
+                return View(instructor);
+            }
+
+            return NotFound();
+        }
+
+        public IActionResult EditInstructor(Instructor instructor)
+        {
+            var ins = InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
+
+            if (ins != null)
+            {
+                ins.Id = instructor.Id;
+                ins.FirstName = instructor.FirstName;
+                ins.LastName = instructor.LastName;
+                ins.IsTenured = instructor.IsTenured;
+                ins.Rank = instructor.Rank;
+                ins.HiringDate = instructor.HiringDate;
+
+                return View("Index", InstructorList);
+            }
+
+            return NotFound();
+        }
+
         public IActionResult ShowDetails(int id)
         {
             Instructor? instructor = InstructorList.FirstOrDefault(ins => ins.Id == id);

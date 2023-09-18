@@ -6,6 +6,7 @@
     <tr>
         <th>Name</th>
         <th>Rank</th>
+        <th>Tenure</th>
         <th>Hiring Date</th>
         <th>?</th>
     </tr>
@@ -15,9 +16,11 @@
         <tr>
             <td>@instructor.FirstName @instructor.LastName</td>
             <td>@instructor.Rank</td>
+            <td>@(instructor.IsTenured ? "Permanent" : "Probationary")</td>
             <td>@instructor.HiringDate</td>
             <td><a asp-action="ShowDetails" asp-route-id="@instructor.Id">Show Details</a></td>
-        </tr>
+            <td><a asp-action="EditInstructor" asp-route-id="@instructor.Id">Edit</a></td>
+            </tr>
     }
     
 </table>

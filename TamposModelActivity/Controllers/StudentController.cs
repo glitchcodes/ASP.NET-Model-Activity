@@ -33,6 +33,52 @@ namespace TamposModelActivity.Controllers
             return View(StudentList);
         }
 
+        [HttpGet]
+        public IActionResult AddStudent()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public IActionResult AddStudent(Student newStudent)
+        {
+            StudentList.Add(newStudent);
+            return View("Index", StudentList);
+        }
+        
+        [HttpGet]
+        public IActionResult EditStudent(int Id)
+        {
+            var student = StudentList.FirstOrDefault(st => st.Id == Id);
+
+            if (student != null)
+            {
+                return View(student);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult EditStudent(Student student)
+        {
+            var st = StudentList.FirstOrDefault(st => st.Id == student.Id);
+
+            if (st != null)
+            {
+                st.Id = student.Id;
+                st.FirstName = student.FirstName;
+                st.LastName = student.LastName;
+                st.Email = student.Email;
+                st.Course = student.Course;
+                st.GPA = student.GPA;
+
+                return View("Index", StudentList);
+            }
+
+            return NotFound();
+        }
+
         public IActionResult ShowDetails(int id)
         {
             Student? student = StudentList.FirstOrDefault(st => st.Id == id);

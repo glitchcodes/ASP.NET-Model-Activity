@@ -1,8 +1,8 @@
-
-
 @{
     ViewData["Title"] = "Student List";
 }
+
+<a class="btn btn-primary" asp-area="" asp-controller="Student" asp-action="AddStudent">Add Student</a>
 
 <table class="table">
     <tr>
@@ -21,6 +21,8 @@
             <td>@student.Course</td>
             <td>@student.GPA</td>
             <td><a asp-action="ShowDetails" asp-route-id="@student.Id">Show Details</a></td>
+            <td><a asp-action="EditStudent" asp-route-id="@student.Id">Edit</a></td>
+
         </tr>
     }
     
