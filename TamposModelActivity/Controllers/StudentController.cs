@@ -4,33 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TamposModelActivity.Models;
+using TamposModelActivity.Services;
 
 namespace TamposModelActivity.Controllers
 {
     public class StudentController : Controller
     {
-        private List<Student> StudentList = new List<Student>
+        private readonly IMyFakeDataService _fakeData;
+
+        public StudentController(IMyFakeDataService fakeData)
         {
-            new Student()
-            {
-                Id = 1, FirstName = "Vincent", LastName = "Tampos", Course = Course.BSIT, AdmissionDate = DateTime.Parse("2022-09-11"),
-                GPA = 1.2, Email = "vincentpaul.tampos.cics@ust.edu.ph"
-            },
-            new Student()
-            {
-                Id = 2, FirstName = "Ellen", LastName = "Richmond", Course = Course.BSCS, AdmissionDate = DateTime.Parse("2022-01-23"),
-                GPA = 1.3, Email = "ellen.richmond.cics@ust.edu.ph"
-            },
-            new Student()
-            {
-                Id = 3, FirstName = "Paris", LastName = "Morris", Course = Course.BSIT, AdmissionDate = DateTime.Parse("2021-03-08"),
-                GPA = 1.5, Email = "paris.morris.cics@ust.edu.ph"
-            },
-        };
+            _fakeData = fakeData;
+        }
         
         public IActionResult Index()
         {
-            return View(StudentList);
+            return View(_fakeData.StudentList);
         }
 
         [HttpGet]
@@ -42,14 +31,14 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult AddStudent(Student newStudent)
         {
-            StudentList.Add(newStudent);
-            return View("Index", StudentList);
+            _fakeData.StudentList.Add(newStudent);
+            return RedirectToAction("Index");
         }
         
         [HttpGet]
         public IActionResult EditStudent(int Id)
         {
-            var student = StudentList.FirstOrDefault(st => st.Id == Id);
+            var student = _fakeData.StudentList.FirstOrDefault(st => st.Id == Id);
 
             if (student != null)
             {
@@ -62,7 +51,7 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult EditStudent(Student student)
         {
-            var st = StudentList.FirstOrDefault(st => st.Id == student.Id);
+            var st = _fakeData.StudentList.FirstOrDefault(st => st.Id == student.Id);
 
             if (st != null)
             {
@@ -73,15 +62,42 @@ namespace TamposModelActivity.Controllers
                 st.Course = student.Course;
                 st.GPA = student.GPA;
 
-                return View("Index", StudentList);
+                return RedirectToAction("Index");
             }
 
             return NotFound();
         }
-
-        public IActionResult ShowDetails(int id)
+        
+        [HttpGet]
+        public IActionResult DeleteStudent(int id)
         {
-            Student? student = StudentList.FirstOrDefault(st => st.Id == id);
+            Student? student = _fakeData.StudentList.FirstOrDefault(st => st.Id == id);
+
+            if (student != null)
+            {
+                return View(student);
+            }
+
+            return NotFound();
+        }
+        
+        [HttpPost]
+        public IActionResult DeleteStudent(Student student)
+        {
+            var st = _fakeData.StudentList.FirstOrDefault(st => st.Id == student.Id);
+
+            if (st != null)
+            {
+                _fakeData.StudentList.Remove(st);
+                return RedirectToAction("Index");
+            }
+            
+            return NotFound();
+        }
+
+        public IActionResult ShowDetails(int Id)
+        {
+            Student? student = _fakeData.StudentList.FirstOrDefault(st => st.Id == Id);
 
             if (student != null)
             {

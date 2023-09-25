@@ -4,38 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TamposModelActivity.Models;
+using TamposModelActivity.Services;
 
 namespace TamposModelActivity.Controllers
 {
     public class InstructorController : Controller
     {
-        private List<Instructor> InstructorList = new List<Instructor>
+        private readonly IMyFakeDataService _fakeData;
+
+        public InstructorController(IMyFakeDataService fakeData)
         {
-            new Instructor()
-            {
-                Id = 1, FirstName = "Nancy", LastName = "Carrillo", Rank = Rank.Instructor, HiringDate = DateTime.Parse("2022-09-11"),
-                IsTenured = true
-            },
-            new Instructor()
-            {
-                Id = 2, FirstName = "Coleman", LastName = "Copeland", Rank = Rank.AssistantProfessor, HiringDate = DateTime.Parse("2022-09-11"),
-                IsTenured = false
-            },
-            new Instructor()
-            {
-                Id = 3, FirstName = "Josiah", LastName = "Trujillo", Rank = Rank.AssociateProfessor, HiringDate = DateTime.Parse("2021-03-08"),
-                IsTenured = true,
-            },
-            new Instructor()
-            {
-                Id = 4, FirstName = "Arron", LastName = "Braun", Rank = Rank.Professor, HiringDate = DateTime.Parse("2020-01-21"),
-                IsTenured = true,
-            },
-        };
+            _fakeData = fakeData;
+        }
         
         public IActionResult Index()
         {
-            return View(InstructorList);
+            return View(_fakeData.InstructorList);
         }
 
         [HttpGet]
@@ -47,14 +31,14 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult AddInstructor(Instructor newInstructor)
         {
-            InstructorList.Add(newInstructor);
-            return View("Index", InstructorList);
+            _fakeData.InstructorList.Add(newInstructor);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult EditInstructor(int Id)
         {
-            var instructor = InstructorList.FirstOrDefault(ins => ins.Id == Id);
+            var instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == Id);
 
             if (instructor != null)
             {
@@ -66,7 +50,7 @@ namespace TamposModelActivity.Controllers
 
         public IActionResult EditInstructor(Instructor instructor)
         {
-            var ins = InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
+            var ins = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
 
             if (ins != null)
             {
@@ -77,7 +61,34 @@ namespace TamposModelActivity.Controllers
                 ins.Rank = instructor.Rank;
                 ins.HiringDate = instructor.HiringDate;
 
-                return View("Index", InstructorList);
+                return RedirectToAction("Index");
+            }
+
+            return NotFound();
+        }
+        
+        [HttpGet]
+        public IActionResult DeleteInstructor(int Id)
+        {
+            var instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == Id);
+
+            if (instructor != null)
+            {
+                return View(instructor);
+            }
+
+            return NotFound();
+        }
+        
+        [HttpPost]
+        public IActionResult DeleteInstructor(Instructor instructor)
+        {
+            var ins = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
+
+            if (ins != null)
+            {
+                _fakeData.InstructorList.Remove(ins);
+                return RedirectToAction("Index");
             }
 
             return NotFound();
@@ -85,7 +96,7 @@ namespace TamposModelActivity.Controllers
 
         public IActionResult ShowDetails(int id)
         {
-            Instructor? instructor = InstructorList.FirstOrDefault(ins => ins.Id == id);
+            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == id);
 
             if (instructor != null)
             {

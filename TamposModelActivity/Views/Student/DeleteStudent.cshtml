@@ -1,0 +1,39 @@
+@model Student;
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<h3>Are you sure?</h3>
+
+<form asp-action="DeleteStudent">
+    @Html.HiddenFor(model => model.Id)
+    <div class="row mb-3">
+        <div class="col">
+            <label asp-for="FirstName" class="form-label">First Name</label>
+            <input asp-for="FirstName" type="text" class="form-control" disabled>
+        </div>
+        <div class="col">
+            <label asp-for="LastName" class="form-label">Last Name</label>
+            <input asp-for="LastName" type="text" class="form-control" disabled>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">Email</label>
+        <input asp-for="Email" type="email" class="form-control" disabled>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Course" class="form-label">Course</label>
+        <select asp-for="Course" class="form-select" asp-items="Html.GetEnumSelectList<Course>()" aria-label="Course" disabled></select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="GPA" class="form-label">GPA</label>
+        <input asp-for="GPA" type="number" class="form-control" max="5" disabled>
+    </div>
+    <div class="mb-3">
+        <label asp-for="AdmissionDate" class="form-label">Enrollment Date</label>
+        <input asp-for="AdmissionDate" class="form-control" disabled>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Confirm</button>
+</form>
