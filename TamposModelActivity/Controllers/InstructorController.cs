@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TamposModelActivity.Data;
 using TamposModelActivity.Models;
 using TamposModelActivity.Services;
 
@@ -10,16 +11,16 @@ namespace TamposModelActivity.Controllers
 {
     public class InstructorController : Controller
     {
-        private readonly IMyFakeDataService _fakeData;
+        private readonly AppDbContext _dbContext;
 
-        public InstructorController(IMyFakeDataService fakeData)
+        public InstructorController(AppDbContext dbContext)
         {
-            _fakeData = fakeData;
+            _dbContext = dbContext;
         }
         
         public IActionResult Index()
         {
-            return View(_fakeData.InstructorList);
+            return View(_dbContext.Instructors);
         }
 
         [HttpGet]
@@ -31,14 +32,15 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult AddInstructor(Instructor newInstructor)
         {
-            _fakeData.InstructorList.Add(newInstructor);
+            _dbContext.Instructors.Add(newInstructor);
+            _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult EditInstructor(int Id)
         {
-            var instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == Id);
+            var instructor = _dbContext.Instructors.FirstOrDefault(ins => ins.Id == Id);
 
             if (instructor != null)
             {
@@ -50,16 +52,16 @@ namespace TamposModelActivity.Controllers
 
         public IActionResult EditInstructor(Instructor instructor)
         {
-            var ins = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
+            var ins = _dbContext.Instructors.FirstOrDefault(ins => ins.Id == instructor.Id);
 
             if (ins != null)
             {
-                ins.Id = instructor.Id;
                 ins.FirstName = instructor.FirstName;
                 ins.LastName = instructor.LastName;
                 ins.IsTenured = instructor.IsTenured;
                 ins.Rank = instructor.Rank;
                 ins.HiringDate = instructor.HiringDate;
+                _dbContext.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -70,7 +72,7 @@ namespace TamposModelActivity.Controllers
         [HttpGet]
         public IActionResult DeleteInstructor(int Id)
         {
-            var instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == Id);
+            var instructor = _dbContext.Instructors.FirstOrDefault(ins => ins.Id == Id);
 
             if (instructor != null)
             {
@@ -83,11 +85,12 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult DeleteInstructor(Instructor instructor)
         {
-            var ins = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == instructor.Id);
+            var ins = _dbContext.Instructors.FirstOrDefault(ins => ins.Id == instructor.Id);
 
             if (ins != null)
             {
-                _fakeData.InstructorList.Remove(ins);
+                _dbContext.Instructors.Remove(ins);
+                _dbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -96,7 +99,7 @@ namespace TamposModelActivity.Controllers
 
         public IActionResult ShowDetails(int id)
         {
-            Instructor? instructor = _fakeData.InstructorList.FirstOrDefault(ins => ins.Id == id);
+            Instructor? instructor = _dbContext.Instructors.FirstOrDefault(ins => ins.Id == id);
 
             if (instructor != null)
             {

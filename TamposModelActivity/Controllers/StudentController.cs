@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TamposModelActivity.Data;
 using TamposModelActivity.Models;
 using TamposModelActivity.Services;
 
@@ -10,16 +11,16 @@ namespace TamposModelActivity.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly IMyFakeDataService _fakeData;
+        private readonly AppDbContext _dbContext;
 
-        public StudentController(IMyFakeDataService fakeData)
+        public StudentController(AppDbContext dbContext)
         {
-            _fakeData = fakeData;
+            _dbContext = dbContext;
         }
         
         public IActionResult Index()
         {
-            return View(_fakeData.StudentList);
+            return View(_dbContext.Students);
         }
 
         [HttpGet]
@@ -31,14 +32,15 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult AddStudent(Student newStudent)
         {
-            _fakeData.StudentList.Add(newStudent);
+            _dbContext.Students.Add(newStudent);
+            _dbContext.SaveChanges();
             return RedirectToAction("Index");
         }
         
         [HttpGet]
         public IActionResult EditStudent(int Id)
         {
-            var student = _fakeData.StudentList.FirstOrDefault(st => st.Id == Id);
+            var student = _dbContext.Students.FirstOrDefault(st => st.Id == Id);
 
             if (student != null)
             {
@@ -51,16 +53,16 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult EditStudent(Student student)
         {
-            var st = _fakeData.StudentList.FirstOrDefault(st => st.Id == student.Id);
+            var st = _dbContext.Students.FirstOrDefault(st => st.Id == student.Id);
 
             if (st != null)
             {
-                st.Id = student.Id;
                 st.FirstName = student.FirstName;
                 st.LastName = student.LastName;
                 st.Email = student.Email;
                 st.Course = student.Course;
                 st.GPA = student.GPA;
+                _dbContext.SaveChanges();
 
                 return RedirectToAction("Index");
             }
@@ -71,7 +73,7 @@ namespace TamposModelActivity.Controllers
         [HttpGet]
         public IActionResult DeleteStudent(int id)
         {
-            Student? student = _fakeData.StudentList.FirstOrDefault(st => st.Id == id);
+            Student? student = _dbContext.Students.FirstOrDefault(st => st.Id == id);
 
             if (student != null)
             {
@@ -84,11 +86,12 @@ namespace TamposModelActivity.Controllers
         [HttpPost]
         public IActionResult DeleteStudent(Student student)
         {
-            var st = _fakeData.StudentList.FirstOrDefault(st => st.Id == student.Id);
+            var st = _dbContext.Students.FirstOrDefault(st => st.Id == student.Id);
 
             if (st != null)
             {
-                _fakeData.StudentList.Remove(st);
+                _dbContext.Students.Remove(st);
+                _dbContext.SaveChanges();
                 return RedirectToAction("Index");
             }
             
@@ -97,7 +100,7 @@ namespace TamposModelActivity.Controllers
 
         public IActionResult ShowDetails(int Id)
         {
-            Student? student = _fakeData.StudentList.FirstOrDefault(st => st.Id == Id);
+            Student? student = _dbContext.Students.FirstOrDefault(st => st.Id == Id);
 
             if (student != null)
             {

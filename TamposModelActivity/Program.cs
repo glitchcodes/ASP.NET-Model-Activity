@@ -1,9 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using TamposModelActivity.Data;
 using TamposModelActivity.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton<IMyFakeDataService, MyFakeDataService>();
+// builder.Services.AddSingleton<IMyFakeDataService, MyFakeDataService>();
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -17,6 +22,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<AppDbContext>();
+context.Database.EnsureCreated();
+
 app.UseStaticFiles();
 
 app.UseRouting();
