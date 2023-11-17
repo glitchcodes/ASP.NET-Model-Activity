@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TamposModelActivity.Models;
 
 namespace TamposModelActivity.Data;
 
-public class AppDbContext: DbContext
+public class AppDbContext: IdentityDbContext<User>
 {
     public DbSet<Student> Students { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
@@ -40,25 +41,41 @@ public class AppDbContext: DbContext
             {
                 Id = 1, FirstName = "Nancy", LastName = "Carrillo", Rank = Rank.Instructor,
                 HiringDate = DateTime.Parse("2022-09-11"),
-                IsTenured = true
+                IsTenured = true,
+                PhoneNumber = "111-222-3334",
+                EmailAddress = "nancycarrillo.ust.edu.ph",
+                PersonalURL = "google.com",
+                UnusedPassword = "12345"
             },
             new Instructor()
             {
                 Id = 2, FirstName = "Coleman", LastName = "Copeland", Rank = Rank.AssistantProfessor,
                 HiringDate = DateTime.Parse("2022-09-11"),
-                IsTenured = false
+                IsTenured = false,
+                PhoneNumber = "111-222-3334",
+                EmailAddress = "colemancopeland.ust.edu.ph",
+                PersonalURL = "google.com",
+                UnusedPassword = "12345"
             },
             new Instructor()
             {
                 Id = 3, FirstName = "Josiah", LastName = "Trujillo", Rank = Rank.AssociateProfessor,
                 HiringDate = DateTime.Parse("2021-03-08"),
                 IsTenured = true,
+                PhoneNumber = "111-222-3334",
+                EmailAddress = "josiahtrujillo.ust.edu.ph",
+                PersonalURL = "google.com",
+                UnusedPassword = "12345"
             },
             new Instructor()
             {
                 Id = 4, FirstName = "Arron", LastName = "Braun", Rank = Rank.Professor,
                 HiringDate = DateTime.Parse("2020-01-21"),
                 IsTenured = true,
+                PhoneNumber = "111-222-3334",
+                EmailAddress = "aaronbraun.ust.edu.ph",
+                PersonalURL = "google.com",
+                UnusedPassword = "12345"
             }
         );
     }
